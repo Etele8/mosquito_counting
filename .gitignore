@@ -1,4 +1,6 @@
 # Byte-compiled / optimized / DLL files
+*xlsx
+*csv
 *.jpg
 *.png
 venv_clean/

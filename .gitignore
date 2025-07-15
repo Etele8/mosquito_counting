@@ -2,6 +2,7 @@
 *xlsx
 *csv
 *.jpg
+*JPG
 *.png
 venv_clean/
 __pycache__/

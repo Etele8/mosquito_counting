@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 *.jpg
 *.png
+venv_clean/
 __pycache__/
 *.py[codz]
 *$py.class

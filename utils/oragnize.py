@@ -3,7 +3,7 @@ import glob
 import shutil
 
 # unpack all the image files from the folders
-base_folders = [os.path.join("D:/intezet/gabor/data/images/20250705", folder) for folder in os.listdir("D:/intezet/gabor/data/images/20250705")]
+base_folders = [os.path.join("D:/intezet/gabor/data/images/20250716", folder) for folder in os.listdir("D:/intezet/gabor/data/images/20250716")]
 
 # inside the base folders there are subfolders with with subfolders
 # the second subfolders contain the images

@@ -2,8 +2,8 @@ import os
 import cv2
 import numpy as np
 
-FOLDER = r'D:\intezet\gabor\data\images\20250705\60perc'
-OUTPUT = r'D:\intezet\gabor\data\images\20250705\60perc_cropped'
+FOLDER = r'D:\intezet\gabor\data\images\20250716\60'
+OUTPUT = r'D:\intezet\gabor\data\images\20250716\60perc_cropped'
 os.makedirs(OUTPUT, exist_ok=True)
 
 files = [f for f in os.listdir(FOLDER) if f.lower().endswith(('.jpg', '.png'))]

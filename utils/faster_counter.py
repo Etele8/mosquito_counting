@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 
 # ---------- CONFIG ----------
-FOLDER = "D:\\intezet\\gabor\\data\\images\\20250705\\10perc"
-OUTPUT_FOLDER = "data/outputs/mosquito_outputs_0705/10"
+FOLDER = "D:\\intezet\\gabor\\data\\images\\20250716\\60perc_cropped"
+OUTPUT_FOLDER = "data/outputs/mosquito_outputs_07016/60"
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(os.path.join(OUTPUT_FOLDER, "masks"), exist_ok=True)
 os.makedirs(os.path.join(OUTPUT_FOLDER, "visuals"), exist_ok=True)

@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+*.csv
+*xlsx
+*.txt
 *.zip
 *.jpg
 *JPG

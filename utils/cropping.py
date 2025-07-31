@@ -1,9 +1,14 @@
 import os
 import cv2
 import numpy as np
+from pathlib import Path
 
-FOLDER = r'D:\intezet\gabor\data\images\20250716\60'
-OUTPUT = r'D:\intezet\gabor\data\images\20250716\60perc_cropped'
+
+NEW_FOLDER = "20250716"  # change this to the folder you want to unpack
+
+root = Path(__file__).resolve().parent
+FOLDER = root / "data" / "images" / NEW_FOLDER / "60"
+OUTPUT = root / "data" / "images" / NEW_FOLDER / "60perc_cropped"
 os.makedirs(OUTPUT, exist_ok=True)
 
 files = [f for f in os.listdir(FOLDER) if f.lower().endswith(('.jpg', '.png'))]

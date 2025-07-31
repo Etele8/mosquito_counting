@@ -2,14 +2,16 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 # ---------- CONFIG ----------
-FOLDER = "D:\\intezet\\gabor\\data\\images\\20250716\\60perc_cropped"
-OUTPUT_FOLDER = "data/outputs/mosquito_outputs_07016/60"
+root = Path(__file__).resolve().parent
+FOLDER = root / "data" / "images" / "20250716" / "60perc_cropped"
+OUTPUT_FOLDER = root / "data" / "outputs" / "mosquito_outputs_0716" / "60"
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "masks"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "visuals"), exist_ok=True)
-CSV_PATH = os.path.join(OUTPUT_FOLDER, "mosquito_counts.csv")
+os.makedirs(OUTPUT_FOLDER / "masks", exist_ok=True)
+os.makedirs(OUTPUT_FOLDER / "visuals", exist_ok=True)
+CSV_PATH = OUTPUT_FOLDER / "mosquito_counts.csv"
 
 # ---------- FUNCTIONS ----------
 

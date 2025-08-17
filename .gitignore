@@ -1,4 +1,6 @@
 # Byte-compiled / optimized / DLL files
+*.RData
+*.Rhistory
 *.csv
 *xlsx
 *.txt

@@ -1,15 +1,18 @@
+"""Count mosquitoes in five horizontal stimulus sections of each image.
+
+This script represents an earlier experiment variant where a single image is
+split into five sections and each section is counted independently. It remains
+useful as a reference workflow for gradient-style experiments.
+"""
+
+import argparse
 import os
 import cv2
 import numpy as np
 import pandas as pd
 
-# ---------- CONFIG ----------
-FOLDER = "D:/intezet/gabor/data/images/20250702/mixed/20perc_23.45"
-OUTPUT_FOLDER = "data/outputs/mosquito_outputs_0702/mixed/20"
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "masks"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "visuals"), exist_ok=True)
-CSV_PATH = os.path.join(OUTPUT_FOLDER, "mosquito_counts.csv")
+DEFAULT_FOLDER = "D:/intezet/gabor/data/images/20250702/mixed/20perc_23.45"
+DEFAULT_OUTPUT_FOLDER = "data/outputs/mosquito_outputs_0702/mixed/20"
 
 # ---------- PROCESSING FUNCTIONS ----------
 
@@ -72,66 +75,80 @@ def compute_section_mean_color(image_section):
     mean_color = image_section.mean(axis=(0, 1))  # BGR
     return int(mean_color[2]), int(mean_color[1]), int(mean_color[0])  # Convert to RGB
 
-# ---------- MAIN ----------
+def build_arg_parser():
+    parser = argparse.ArgumentParser(
+        description="Count mosquitoes in each of five equal-width sections of an image set."
+    )
+    parser.add_argument("--folder", default=DEFAULT_FOLDER, help="Input folder of JPG/PNG files.")
+    parser.add_argument(
+        "--output-folder",
+        default=DEFAULT_OUTPUT_FOLDER,
+        help="Output folder for masks, annotated visuals, and mosquito_counts.csv.",
+    )
+    return parser
 
-results = []
-file_list = [f for f in os.listdir(FOLDER) if f.lower().endswith((".jpg", ".png"))]
 
-for i, filename in enumerate(file_list, 1):
-    path = os.path.join(FOLDER, filename)
-    img = cv2.imread(path)
-    if img is None:
-        continue
+def main():
+    args = build_arg_parser().parse_args()
+    os.makedirs(args.output_folder, exist_ok=True)
+    os.makedirs(os.path.join(args.output_folder, "masks"), exist_ok=True)
+    os.makedirs(os.path.join(args.output_folder, "visuals"), exist_ok=True)
+    csv_path = os.path.join(args.output_folder, "mosquito_counts.csv")
 
-    h, w = img.shape[:2]
-    section_width = w // 5
-    total_count = 0
-    section_counts = []
-    section_colors = []
+    results = []
+    file_list = [f for f in os.listdir(args.folder) if f.lower().endswith((".jpg", ".png"))]
 
-    combined_mask = np.zeros((h, w), dtype=np.uint8)
+    for i, filename in enumerate(file_list, 1):
+        path = os.path.join(args.folder, filename)
+        img = cv2.imread(path)
+        if img is None:
+            continue
 
-    for s in range(5):
-        x_start = s * section_width
-        x_end = (s + 1) * section_width if s < 4 else w
-        section = img[:, x_start:x_end]
+        h, w = img.shape[:2]
+        section_width = w // 5
+        total_count = 0
+        section_counts = []
+        section_colors = []
+        combined_mask = np.zeros((h, w), dtype=np.uint8)
 
-        # Color detection
-        r, g, b = compute_section_mean_color(section)
-        section_colors.append((r, g, b))
+        for s in range(5):
+            x_start = s * section_width
+            x_end = (s + 1) * section_width if s < 4 else w
+            section = img[:, x_start:x_end]
 
-        # Mosquito detection
-        proc = preprocess_image(section)
-        filtered_mask, labels, valid_labels, extra = filter_components(proc)
+            r, g, b = compute_section_mean_color(section)
+            section_colors.append((r, g, b))
 
-        combined_mask[:, x_start:x_end] = filtered_mask
+            proc = preprocess_image(section)
+            filtered_mask, labels, valid_labels, extra = filter_components(proc)
+            combined_mask[:, x_start:x_end] = filtered_mask
 
-        section_total = len(valid_labels) + extra
-        section_counts.append(section_total)
-        total_count += section_total
+            section_total = len(valid_labels) + extra
+            section_counts.append(section_total)
+            total_count += section_total
 
-    annotated_img = annotate_original(img, section_counts)
+        annotated_img = annotate_original(img, section_counts)
 
-    # Save outputs
-    base = os.path.splitext(filename)[0]
-    cv2.imwrite(os.path.join(OUTPUT_FOLDER, "masks", f"{base}_mask.png"), combined_mask)
-    cv2.imwrite(os.path.join(OUTPUT_FOLDER, "visuals", f"{base}_annotated.png"), annotated_img)
+        base = os.path.splitext(filename)[0]
+        cv2.imwrite(os.path.join(args.output_folder, "masks", f"{base}_mask.png"), combined_mask)
+        cv2.imwrite(
+            os.path.join(args.output_folder, "visuals", f"{base}_annotated.png"),
+            annotated_img,
+        )
 
-    row = {
-        "filename": filename,
-        "total_mosquitoes": total_count,
-    }
+        row = {"filename": filename, "total_mosquitoes": total_count}
+        for s in range(5):
+            row[f"section_{s+1}"] = section_counts[s]
+            row[f"section_{s+1}_color"] = (
+                f"rgb({section_colors[s][0]}, {section_colors[s][1]}, {section_colors[s][2]})"
+            )
 
-    # Add counts and colors
-    for s in range(5):
-        row[f"section_{s+1}"] = section_counts[s]
-        row[f"section_{s+1}_color"] = f"rgb({section_colors[s][0]}, {section_colors[s][1]}, {section_colors[s][2]})"
+        results.append(row)
+        print(f"{i}/{len(file_list)} {filename}: {total_count} mosquitoes detected")
 
-    results.append(row)
+    pd.DataFrame(results).to_csv(csv_path, index=False)
+    print(f"\nCSV saved to: {csv_path}")
 
-    print(f"{i}/{len(file_list)} {filename}: {total_count} mosquitoes detected")
 
-# Save CSV
-df = pd.DataFrame(results)
-df.to_csv(CSV_PATH, index=False)
-print(f"\nCSV saved to: {CSV_PATH}")
+if __name__ == "__main__":
+    main()

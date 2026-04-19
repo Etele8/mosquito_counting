@@ -1,4 +1,5 @@
-import os
+"""Interactive perspective-cropping utility for experiment chamber images."""
+
 import cv2
 import numpy as np
 from pathlib import Path

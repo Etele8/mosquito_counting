@@ -1,4 +1,6 @@
-# install.packages(c("readr","dplyr","ggplot2"))  # <- if needed
+# Optional plotting script for already-generated CSV summaries.
+# Install once if needed:
+# install.packages(c("readr", "dplyr", "ggplot2"))
 
 library(readr)
 library(dplyr)

@@ -50,18 +50,6 @@ Why it matters: this is the kind of messy, real-world workflow where the enginee
 - R (`readr`, `dplyr`, `ggplot2`) for optional exploratory plotting
 - PowerShell helper scripts for Windows-friendly setup and demo commands
 
-## Data
-
-Raw experiment images and most generated outputs are intentionally not committed.
-
-- Local data footprint observed during repo preparation: about `25.9 GB`
-- Raw images: about `25.2 GB`
-- Generated outputs: about `681 MB`
-- Included in the repo: lightweight example PDFs in [plots/boxplot_0813.pdf](/d:/intezet/gabor/plots/boxplot_0813.pdf) and [plots/boxplot_0816.pdf](/d:/intezet/gabor/plots/boxplot_0816.pdf)
-- Omitted from the repo: raw image folders, zip archives, generated masks/visuals, and CSV outputs
-
-See [data/README.md](/d:/intezet/gabor/data/README.md) for the exact policy and what to provide manually if you want a public sample dataset.
-
 ## Method / Approach
 
 1. Raw photos are cropped to a consistent chamber region using the interactive helper in [utils/cropping.py](/d:/intezet/gabor/utils/cropping.py:1).
@@ -76,17 +64,6 @@ The repository currently includes two lightweight example plot exports:
 
 - [plots/boxplot_0813.pdf](/d:/intezet/gabor/plots/boxplot_0813.pdf)
 - [plots/boxplot_0816.pdf](/d:/intezet/gabor/plots/boxplot_0816.pdf)
-
-What is intentionally not claimed here:
-
-- No benchmark accuracy is reported because no validated labeled ground-truth set is included in the public repo.
-- No deployment claim is made; this is a local analysis workflow.
-
-TODO for manual completion:
-
-- Add 1 to 2 screenshots or GIFs showing raw cropped input, generated mask, and final count visualization.
-- Add any validated quantitative result you are comfortable defending in an interview.
-- Add a short note explaining the specific biological or experimental conclusion if you want the README to emphasize domain impact more directly.
 
 ## Quickstart
 
@@ -129,24 +106,3 @@ Open R or RStudio and adjust `csv_path` in [utils/vis.r](/d:/intezet/gabor/utils
 - Cropping is currently semi-manual, which improves control but limits full automation.
 - The repo is reproducible as a code workflow, but not yet fully reproducible as a public data package.
 - `requirements.txt` is intentionally minimal for the main pipeline; [requirements-full.txt](/d:/intezet/gabor/requirements-full.txt) preserves the broader exploratory environment snapshot.
-
-## Future Improvements
-
-- Add a small, sanitized public sample dataset
-- Add a notebook or report that compares automatic counts against manual spot checks
-- Package experiment configuration into named presets instead of hardcoded folder conventions
-- Add automated regression tests for parsing and counting on a tiny fixture set
-- Replace manual cropping with a more automated chamber-detection step if the capture setup is stable enough
-- Add a supervised mosquito gender-classification stage after manual annotation in CVAT, using PyTorch for model training and evaluation
-
-## Contact
-
-- GitHub: `TODO add your profile URL`
-- LinkedIn: `TODO add your LinkedIn URL`
-- Website: `TODO add your portfolio URL`
-
-## Notes Before Publishing
-
-- License: `TODO choose a license before making the repository public`
-- Social preview assets and screenshots: see [docs/ASSETS_NEEDED.md](/d:/intezet/gabor/docs/ASSETS_NEEDED.md)
-- GitHub repo settings checklist: see [docs/MANUAL_GITHUB_SETUP.md](/d:/intezet/gabor/docs/MANUAL_GITHUB_SETUP.md)

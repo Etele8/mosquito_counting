@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
-venv/
-env/
-ENV/
 .python-version
 
 # Editor and tooling state

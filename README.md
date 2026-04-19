@@ -4,8 +4,6 @@
 
 This repository contains a practical image-analysis workflow for mosquito attraction experiments. It combines manual preprocessing, classical computer vision, and lightweight reporting so experiment folders can be converted into inspectable counts, masks, and summary plots.
 
-For a recruiter or engineering manager, the value is not just "image processing" in the abstract. The project shows the kind of engineering judgment that matters in real applied work: dealing with inconsistent raw data, building repeatable local tooling, exposing outputs that can be checked visually, and keeping the workflow simple enough for a lab or collaborator to rerun.
-
 ## Hero
 
 The project processes batches of experimental chamber photos and estimates mosquito counts from each image. Raw images are manually cropped into a consistent region of interest, then a connected-component pipeline detects candidate insects, exports inspection masks and visualizations, and writes CSV summaries that can be plotted or analyzed further.
@@ -50,6 +48,16 @@ Why it matters: this is the kind of messy, real-world workflow where the enginee
 - R (`readr`, `dplyr`, `ggplot2`) for optional exploratory plotting
 - PowerShell helper scripts for Windows-friendly setup and demo commands
 
+## Data
+
+Raw experiment images and most generated outputs are intentionally not committed.
+
+- Local data footprint observed during repo preparation: about `25.9 GB`
+- Raw images: about `25.2 GB`
+- Generated outputs: about `681 MB`
+- Included in the repo: lightweight example PDFs in [plots/boxplot_0813.pdf](/d:/intezet/gabor/plots/boxplot_0813.pdf) and [plots/boxplot_0816.pdf](/d:/intezet/gabor/plots/boxplot_0816.pdf)
+- Omitted from the repo: raw image folders, zip archives, generated masks, generated visuals, and CSV outputs
+
 ## Method / Approach
 
 1. Raw photos are cropped to a consistent chamber region using the interactive helper in [utils/cropping.py](/d:/intezet/gabor/utils/cropping.py:1).
@@ -58,12 +66,23 @@ Why it matters: this is the kind of messy, real-world workflow where the enginee
 4. For each image, the script writes a binary mask, a colorized connected-component visualization, and per-image count rows.
 5. Per-folder and aggregated CSV outputs are then used for downstream analysis and optional plotting in [utils/vis.r](/d:/intezet/gabor/utils/vis.r:1).
 
+Useful implementation detail retained from the older draft:
+
+- Accepted image types are `.jpg`, `.jpeg`, and `.png`.
+- Unreadable files are skipped instead of stopping the batch.
+- Subfolders are parsed in the form `experimentId_timepointperc`, for example `01_30perc`.
+
 ## Results
 
 The repository currently includes two lightweight example plot exports:
 
 - [plots/boxplot_0813.pdf](/d:/intezet/gabor/plots/boxplot_0813.pdf)
 - [plots/boxplot_0816.pdf](/d:/intezet/gabor/plots/boxplot_0816.pdf)
+
+What is intentionally not claimed here:
+
+- No benchmark accuracy is reported because no validated labeled ground-truth set is included in the public repo.
+- No deployment claim is made; this is a local analysis workflow.
 
 ## Quickstart
 
@@ -106,3 +125,17 @@ Open R or RStudio and adjust `csv_path` in [utils/vis.r](/d:/intezet/gabor/utils
 - Cropping is currently semi-manual, which improves control but limits full automation.
 - The repo is reproducible as a code workflow, but not yet fully reproducible as a public data package.
 - `requirements.txt` is intentionally minimal for the main pipeline; [requirements-full.txt](/d:/intezet/gabor/requirements-full.txt) preserves the broader exploratory environment snapshot.
+
+## Troubleshooting
+
+- Too many or too few detections: adjust adaptive threshold parameters, morphology kernel sizes, and area thresholds in the counting scripts.
+- Very large images: processing is CPU-bound; consider downsampling only if it does not compromise detection quality.
+- Cropping window not fullscreen: some Windows setups ignore the fullscreen hint; the cropper can still be used by resizing the window manually.
+- CSV display issues in Excel: import as UTF-8 through Excel's text or CSV import flow if needed.
+
+## Future Improvements
+
+- Add a notebook or report that compares automatic counts against manual spot checks
+- Add automated regression tests for parsing and counting on a tiny fixture set
+- Replace manual cropping with a more automated chamber-detection step if the capture setup is stable enough
+- Add a supervised mosquito gender-classification stage after manual annotation in CVAT, using PyTorch for model training and evaluation

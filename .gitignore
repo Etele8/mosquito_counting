@@ -1,28 +1,13 @@
-# Python caches and environments
+# Python caches and local virtual environments
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
-.python-version
+venv/
+env/
+ENV/
 
-# Editor and tooling state
-.vscode/
-.idea/
-.ruff_cache/
-.mypy_cache/
-.pytest_cache/
-.ipynb_checkpoints/
-
-# Local environment and secrets
-.env
-.env.*
-!.env.example
-
-# OS noise
-.DS_Store
-Thumbs.db
-
-# Local R session files
+# Byte-compiled / optimized / DLL files
 *.RData
 *.Rhistory
 
